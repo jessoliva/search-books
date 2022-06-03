@@ -17,6 +17,11 @@ const resolvers = {
 
       throw new AuthenticationError('Not logged in');
     },
+    users: async () => {
+      return User.find()
+      .select('-__v -password')
+      .populate('savedBooks');
+    },
   },
   Mutation: {
     addUser: async (parent, args) => {
@@ -41,14 +46,12 @@ const resolvers = {
       const token = signToken(user);
       return { token, user };
     },
-    saveBook: async (parent, { bookId }, context) => {
+    saveBook: async (parent, { book }, context) => {
       if (context.user) {
-
-        console.log(bookId);
 
         const updatedUser = await User.findByIdAndUpdate(
           { _id: context.user._id },
-          { $addToSet: { savedBooks: bookId } },
+          { $addToSet: { savedBooks: book } },
           { new: true, runValidators: true }
         );
 

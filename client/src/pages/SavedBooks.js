@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+// import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Jumbotron, Container, CardColumns, Card, Button } from 'react-bootstrap';
 
 // import { getMe, deleteBook } from '../utils/API';
@@ -9,6 +10,7 @@ import { removeBookId } from '../utils/localStorage';
 import { useQuery, useMutation } from '@apollo/client';
 import { REMOVE_BOOK } from '../utils/mutations';
 import { GET_ME } from '../utils/queries';
+import { Redirect } from 'react-router-dom';
 
 const SavedBooks = () => {
 
@@ -18,10 +20,12 @@ const SavedBooks = () => {
   const { loading, data } = useQuery(GET_ME);
   const userData = data?.me || {};
 
+  console.log(userData.savedBooks);
+
   // const [userData, setUserData] = useState({});
 
-  // use this to determine if `useEffect()` hook needs to run again
-  const userDataLength = Object.keys(userData).length;
+  // // use this to determine if `useEffect()` hook needs to run again
+  // const userDataLength = Object.keys(userData).length;
 
   // useEffect(() => {
   //   const getUserData = async () => {
@@ -63,10 +67,12 @@ const SavedBooks = () => {
 
       // upon success, remove book's id from localStorage
       removeBookId(bookId);
+
     } catch (err) {
       console.error(err);
     }
 
+    refreshPage();
     // try {
     //   const response = await deleteBook(bookId, token);
 
@@ -83,10 +89,20 @@ const SavedBooks = () => {
     // }
   };
 
+  const refreshPage = function() {
+    window.location.reload();
+  }
+
   // if data isn't here yet, say so
-  if (!userDataLength) {
+  // if (!userDataLength) {
+  //   return <h2>LOADING...</h2>;
+  // }
+
+  //~~ new
+  if (loading) {
     return <h2>LOADING...</h2>;
   }
+
 
   return (
     <>

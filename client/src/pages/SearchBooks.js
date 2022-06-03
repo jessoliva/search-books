@@ -19,6 +19,8 @@ const SearchBooks = () => {
   // create state to hold saved bookId values
   const [savedBookIds, setSavedBookIds] = useState(getSavedBookIds());
 
+  console.log('this is', savedBookIds);
+
   //~~ new: create a hook to handle the mutation
   const [saveBook] = useMutation(SAVE_BOOK);
 
